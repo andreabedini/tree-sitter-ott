@@ -1,0 +1,340 @@
+================================================================================
+Metavariables with synonyms and homs
+================================================================================
+
+metavar var, x ::= {{ com term variable }}
+  {{ isa string }} {{ coq-equality }} {{ tex \mathit{[[var]]} }}
+indexvar i, j ::= {{ lex numeral }}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (metavar_declaration
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (hom
+      (hom_name)
+      (hom_body))
+    (hom
+      (hom_name)
+      (hom_body))
+    (hom
+      (hom_name))
+    (hom
+      (hom_name)
+      (hom_body
+        (quotation
+          (term)))))
+  (metavar_declaration
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (hom
+      (hom_name)
+      (hom_body))))
+
+================================================================================
+Grammar rules and productions
+================================================================================
+
+grammar
+term, t :: 't_' ::=                  {{ com term }}
+  | x            ::     :: var
+  | \ x . t      ::     :: lam   (+ bind x in t +)
+  | ( t )        :: S   :: paren {{ icho [[t]] }}
+  | { t / x } t' :: M I :: sub
+'in' :: '' ::=
+  | 'in' {{ ::= % :: :: in_
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (root
+        (identifier))
+      (identifier)
+      (hom
+        (hom_name)
+        (hom_body))
+      (production
+        (elements
+          (element))
+        (identifier))
+      (production
+        (elements
+          (element)
+          (element)
+          (element)
+          (element))
+        (identifier)
+        (bindspec_group
+          (bindspec
+            (mse
+              (identifier))
+            (identifier))))
+      (production
+        (elements
+          (element)
+          (element)
+          (element))
+        (category
+          (identifier))
+        (identifier)
+        (hom
+          (hom_name)
+          (hom_body
+            (quotation
+              (term)))))
+      (production
+        (elements
+          (element)
+          (element)
+          (element)
+          (element)
+          (element)
+          (element))
+        (category
+          (identifier))
+        (category
+          (identifier))
+        (identifier)))
+    (rule
+      (root
+        (identifier))
+      (identifier)
+      (production
+        (elements
+          (quoted_element)
+          (element)
+          (element)
+          (element))
+        (identifier)))))
+
+================================================================================
+List forms and comprehensions in productions
+================================================================================
+
+grammar
+e :: e_ ::=
+  | e1 , .. , en             :: :: tuple
+  | </ ei // i IN 1 .. n />  :: :: comp
+  | </ ei // i // n />       :: :: comp2
+  | IN // />                 :: :: plain
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (identifier)
+      (production
+        (elements
+          (element)
+          (element)
+          (dots)
+          (element)
+          (element))
+        (identifier))
+      (production
+        (elements
+          (comprehension
+            (element)
+            (element)
+            (element)
+            (dots)
+            (element)))
+        (identifier))
+      (production
+        (elements
+          (comprehension
+            (element)
+            (element)
+            (element)))
+        (identifier))
+      (production
+        (elements
+          (element)
+          (element)
+          (element))
+        (identifier)))))
+
+================================================================================
+Binding specifications
+================================================================================
+
+grammar
+p :: p_ ::=
+  | x :: :: a (+ b = x +) (+ b = {} union b(p1 .. pn) +)
+  | y :: :: b (+ b = b </ pi // i IN 1 .. n /> +) (+ bind b(p) in e +)
+  | z :: :: c (+ names(x) # names(y) distinctnames(z) +)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (identifier)
+      (production
+        (elements
+          (element))
+        (identifier)
+        (bindspec_group
+          (bindspec
+            (identifier)
+            (mse
+              (identifier))))
+        (bindspec_group
+          (bindspec
+            (identifier)
+            (mse
+              (mse)
+              (mse
+                (identifier)
+                (identifier)
+                (dots)
+                (identifier))))))
+      (production
+        (elements
+          (element))
+        (identifier)
+        (bindspec_group
+          (bindspec
+            (identifier)
+            (mse
+              (identifier)
+              (bind_comprehension
+                (identifier)
+                (comp_bound
+                  (identifier)
+                  (identifier)
+                  (dots)
+                  (identifier))))))
+        (bindspec_group
+          (bindspec
+            (mse
+              (identifier)
+              (identifier))
+            (identifier))))
+      (production
+        (elements
+          (element))
+        (identifier)
+        (bindspec_group
+          (bindspec
+            (mse
+              (identifier))
+            (mse
+              (identifier)))
+          (bindspec
+            (mse
+              (identifier))))))))
+
+================================================================================
+Subrules, context rules, substitutions, free variables and priorities
+================================================================================
+
+subrules
+  val <:: term
+contextrules
+  E _:: term :: term
+substitutions
+  single term var :: tsubst
+  multiple term var :: msubst {{ coq x }}
+freevars
+  term var :: fv
+parsing
+  t_app left t_app
+  t_lam <= t_app
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (subrules
+    (subrule
+      (identifier)
+      (identifier)))
+  (context_rules
+    (context_rule
+      (identifier)
+      (identifier)
+      (identifier)))
+  (substitutions
+    (substitution
+      (identifier)
+      (identifier)
+      (identifier))
+    (substitution
+      (identifier)
+      (identifier)
+      (identifier)
+      (hom
+        (hom_name)
+        (hom_body))))
+  (free_variables
+    (free_variable
+      (identifier)
+      (identifier)
+      (identifier)))
+  (parsing
+    (priority
+      (identifier)
+      (identifier))
+    (priority
+      (identifier)
+      (identifier))))
+
+================================================================================
+Hom sections, embeds and Coq sections
+================================================================================
+
+homs 't_'
+  :: var {{ tex [[x]] }}
+  :: lam (+ bind x in t +)
+embed {{ coq Definition x := 1. }}
+{{* tex-preamble \newcommand{\x}{}} *}}
+begincoqsection S
+coqvariable v
+endcoqsection S
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (hom_section
+    (identifier)
+    (hom_section_item
+      (identifier)
+      (hom
+        (hom_name)
+        (hom_body
+          (quotation
+            (term)))))
+    (hom_section_item
+      (identifier)
+      (bindspec_group
+        (bindspec
+          (mse
+            (identifier))
+          (identifier)))))
+  (embed
+    (hom
+      (hom_name)
+      (hom_body))
+    (hom
+      (hom_name)
+      (hom_body)))
+  (coq_section_begin
+    (identifier))
+  (coq_variable
+    (identifier))
+  (coq_section_end
+    (identifier)))

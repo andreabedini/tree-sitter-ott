@@ -1,0 +1,51 @@
+================================================================================
+Line and nested block comments
+================================================================================
+
+% a line comment
+>> a >> nested << comment
+% a percent hides << on its line
+<< metavar x ::= {{ tex x % not a comment >> neither }}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (line_comment)
+  (block_comment)
+  (metavar_declaration
+    (root
+      (identifier))
+    (hom
+      (hom_name)
+      (hom_body))))
+
+================================================================================
+Comments in binding specifications, not in elements
+================================================================================
+
+grammar
+t :: t_ ::=
+  | % >> x :: :: a (+ >> c << bind x in t % c
+  +)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (identifier)
+      (production
+        (elements
+          (element)
+          (element)
+          (element))
+        (identifier)
+        (bindspec_group
+          (block_comment)
+          (bindspec
+            (mse
+              (identifier))
+            (identifier))
+          (line_comment))))))

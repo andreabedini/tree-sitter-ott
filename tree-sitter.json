@@ -1,0 +1,23 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "ott",
+      "camelcase": "Ott",
+      "title": "Ott",
+      "scope": "source.ott",
+      "file-types": ["ott"],
+      "injection-regex": "^ott$",
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "BSD-3-Clause",
+    "description": "Ott grammar for tree-sitter",
+    "authors": [{ "name": "Andrea Bedini", "email": "andrea@andreabedini.com" }],
+    "links": { "repository": "https://github.com/andreabedini/tree-sitter-ott" }
+  },
+  "bindings": { "c": true, "go": false, "node": false, "python": false, "rust": false, "swift": false, "zig": false }
+}

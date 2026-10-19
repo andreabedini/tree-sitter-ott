@@ -1,0 +1,201 @@
+================================================================================
+Inference rules
+================================================================================
+
+defns
+Jop :: '' ::=
+
+ defn
+ t1 --> t2 :: ::reduce::'' {{ com $[[t1]]$ reduces to $[[t2]]$ }} by
+
+
+    --------------------------  :: ax_app
+    (\x.t1) v2 -->  {v2/x}t1
+
+    t1 --> t1'
+    % a comment line
+    t2 --> t2' [[:second]]
+    -------------- S :: ctx {{ com context }}
+    t1 t2 --> t1' t2'
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (definitions
+    (identifier)
+    (identifier)
+    (definition
+      (elements
+        (element)
+        (element)
+        (element))
+      (identifier)
+      (identifier)
+      (hom
+        (hom_name)
+        (hom_body
+          (quotation
+            (term))
+          (quotation
+            (term))))
+      (inference_rule
+        (rule_line
+          (dashes)
+          (identifier))
+        (conclusion))
+      (inference_rule
+        (premise)
+        (line_comment)
+        (premise)
+        (rule_line
+          (dashes)
+          (category
+            (identifier))
+          (identifier)
+          (hom
+            (hom_name)
+            (hom_body)))
+        (conclusion)))))
+
+================================================================================
+Comment blocks, embedded premises and lineless rules
+================================================================================
+
+defns
+J :: '' ::=
+
+defn
+t :: :: j :: j_ by
+
+{{ com
+Some [[t]] text.
+}}
+
+{{com another }}
+
+{{ coq True }}
+{{ notcom }}
+-------- :: a
+t
+
+t1
+t2
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (definitions
+    (identifier)
+    (identifier)
+    (definition
+      (elements
+        (element))
+      (identifier)
+      (identifier)
+      (comment_block
+        (hom_name)
+        (hom_body
+          (quotation
+            (term))))
+      (comment_block
+        (hom_name)
+        (hom_body))
+      (inference_rule
+        (premise)
+        (premise)
+        (rule_line
+          (dashes)
+          (identifier))
+        (conclusion))
+      (formula_rule
+        (formula)
+        (formula)))))
+
+================================================================================
+Block comments and keyword lines in a definition
+================================================================================
+
+defns
+J :: '' ::=
+
+defn
+t :: :: j :: j_ by
+
+>>
+ignored << too
+------ :: a
+a >> b
+
+grammar
+t :: t_ ::=
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (definitions
+    (identifier)
+    (identifier)
+    (definition
+      (elements
+        (element))
+      (identifier)
+      (identifier)
+      (block_comment)
+      (inference_rule
+        (premise)
+        (rule_line
+          (dashes)
+          (identifier))
+        (conclusion))))
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (identifier))))
+
+================================================================================
+Functions
+================================================================================
+
+funs
+Fv ::=
+fun
+fv ( t ) :: vars :: fv {{ com free variables }} by
+
+fv ( x ) === x
+% comment
+fv ( t t' ) === fv(t) , fv(t')
+
+fun
+bv ( t ) :: vars :: bv by
+
+bv ( x ) === {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (functions
+    (identifier)
+    (function
+      (elements
+        (element)
+        (element)
+        (element)
+        (element))
+      (identifier)
+      (identifier)
+      (hom
+        (hom_name)
+        (hom_body))
+      (clause)
+      (line_comment)
+      (clause))
+    (function
+      (elements
+        (element)
+        (element)
+        (element)
+        (element))
+      (identifier)
+      (identifier)
+      (clause))))
