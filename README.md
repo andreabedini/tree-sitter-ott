@@ -56,6 +56,42 @@ made of the rest of it.
 Capture names follow nvim-treesitter's conventions. The grammar has not yet
 been tried in an editor.
 
+`queries/helix` holds Helix's versions (25.07 or later):
+
+- `highlights.scm`: the same highlights with Helix's capture names.
+- `textobjects.scm`: types (`t`) are metavariable declarations, grammar
+  rules, and groups of definitions or functions. Functions (`f`) are
+  `defn` and `fun` blocks. Arguments (`a`) are production elements and
+  binding specifications. Entries (`e`) are productions, inference rules,
+  function clauses and section items, and their premises and conclusions.
+  Comments (`c`) include `com` homs.
+- `indents.scm`: indents productions under their rule, rules and clauses
+  under `defn` and `fun`, and section items under their keyword.
+- `injections.scm`: a link to `queries/injections.scm`.
+
+To use them, link the directory into Helix's runtime and declare the
+language in `~/.config/helix/languages.toml`:
+
+```console
+$ ln -s "$PWD/queries/helix" ~/.config/helix/runtime/queries/ott
+```
+
+```toml
+[[language]]
+name = "ott"
+scope = "source.ott"
+file-types = ["ott"]
+comment-token = "%"
+block-comment-tokens = { start = ">>", end = "<<" }
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "ott"
+source = { git = "https://github.com/andreabedini/tree-sitter-ott", rev = "<commit>" }
+```
+
+and then `hx --grammar fetch` and `hx --grammar build`.
+
 ## Building and testing
 
 ```console
