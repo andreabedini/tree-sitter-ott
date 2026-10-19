@@ -338,3 +338,57 @@ endcoqsection S
     (identifier))
   (coq_section_end
     (identifier)))
+
+================================================================================
+Binding-specification keywords are names elsewhere
+================================================================================
+
+metavar x, bind, in, names, union, IN, distinctnames ::=
+grammar
+t :: t_ ::=
+  | in bind :: :: names (+ bind x in t +)
+  | x :: :: union
+parsing
+  t_names <= t_union
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (metavar_declaration
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (root
+      (identifier))
+    (root
+      (identifier)))
+  (grammar
+    (rule
+      (root
+        (identifier))
+      (identifier)
+      (production
+        (elements
+          (element)
+          (element))
+        (identifier)
+        (bindspec_group
+          (bindspec
+            (mse
+              (identifier))
+            (identifier))))
+      (production
+        (elements
+          (element))
+        (identifier))))
+  (parsing
+    (priority
+      (identifier)
+      (identifier))))

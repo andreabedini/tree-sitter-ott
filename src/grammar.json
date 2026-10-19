@@ -1290,31 +1290,48 @@
         {
           "type": "REPEAT",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "_blank_line"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "inference_rule"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "formula_rule"
-              },
-              {
-                "type": "ALIAS",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "hom"
-                },
-                "named": true,
-                "value": "comment_block"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "_rule_block"
           }
+        }
+      ]
+    },
+    "_rule_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "inference_rule"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "formula_rule"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "hom"
+              },
+              "named": true,
+              "value": "comment_block"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_rule_break"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -1507,17 +1524,8 @@
         {
           "type": "REPEAT",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "_blank_line"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "clause"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "clause"
           }
         }
       ]
@@ -1723,7 +1731,7 @@
     },
     {
       "type": "SYMBOL",
-      "name": "_blank_line"
+      "name": "_rule_break"
     },
     {
       "type": "SYMBOL",

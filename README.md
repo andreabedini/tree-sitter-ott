@@ -22,6 +22,14 @@ clause is one node, and so is the inside of each `[[ ]]` quotation (`term`).
 haskott's language server (`haskott lsp`) knows that grammar and is the place
 to classify those terms.
 
+The grammar accepts every file Ott parses and gives it the structure Ott
+does, but it does not try to reject every file Ott rejects: in an editor a
+looser parse keeps more of a broken file highlighted, and haskott's language
+server reports Ott's errors. A file Ott rejects may therefore parse here, for
+example one with a `{{` nested inside a hom, a production comprehension with
+an irregular bound, a keyword such as `left` used unquoted as a name, or a
+final `%` comment without a newline.
+
 ## Lexer modes
 
 Ott's lexer is context-dependent (`GRAMMAR.md` §2.3). Here the parse state

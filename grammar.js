@@ -23,7 +23,7 @@ module.exports = grammar({
   externals: $ => [
     // defnlang (§2.9)
     $._line,
-    $._blank_line,
+    $._rule_break,
     // comments (§2.10); block comments nest and depend on the mode
     $.block_comment,
     // elements (§2.5)
@@ -274,12 +274,19 @@ module.exports = grammar({
       field('prefix', $.identifier),
       repeat($.hom),
       'by',
-      repeat(choice(
-        $._blank_line,
+      repeat($._rule_block),
+    ),
+
+    // Rules are separated by blank lines (§4). The scanner marks the end of
+    // a rule followed by one with a zero-width break, so that the blank
+    // lines belong to no node.
+    _rule_block: $ => seq(
+      choice(
         $.inference_rule,
         $.formula_rule,
         alias($.hom, $.comment_block),
-      )),
+      ),
+      optional($._rule_break),
     ),
 
     // The lines after the dashed line, up to a blank line, are conclusions.
@@ -324,7 +331,7 @@ module.exports = grammar({
       field('name', $.identifier),
       repeat($.hom),
       'by',
-      repeat(choice($._blank_line, $.clause)),
+      repeat($.clause),
     ),
 
     clause: $ => $._line,

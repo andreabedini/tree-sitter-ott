@@ -5,7 +5,7 @@
 //
 //   hom name, hom text, quotation text valid -> hom / hom_star (§2.6)
 //   element valid                            -> elements (§2.5)
-//   line or blank line valid                 -> defnlang (§2.9)
+//   line or rule break valid                 -> defnlang (§2.9)
 //   otherwise                                -> metalang (§2.4), where only
 //                                               block comments are ours
 //
@@ -22,7 +22,7 @@
 
 enum TokenType {
   LINE,
-  BLANK_LINE,
+  RULE_BREAK,
   BLOCK_COMMENT,
   ELEMENT,
   QUOTED_ELEMENT,
@@ -260,10 +260,14 @@ static const char *const LINE_KEYWORDS[] = {
 
 // §2.9: lexed one line at a time. Lines that start a keyword, a dashed
 // line, a comment line or a {{ com }} block are left to the grammar's own
-// tokens; any other non-blank line is one token.
+// tokens; any other non-blank line is one token. Blank lines are
+// whitespace, but where a rule may end, the first one is announced by a
+// zero-width break at the end of the line before it.
 static bool scan_defnlang(Scanner *scanner, TSLexer *lexer, const bool *valid) {
   uint32_t column = lexer->get_column(lexer);
   bool at_line_start = column == 0;
+  // A break ends here, however far the scan below looks ahead.
+  lexer->mark_end(lexer);
   if (scanner->after_comment && column == scanner->comment_end_column) {
     while (!lexer->eof(lexer) && is_nnws(lexer->lookahead)) skip(lexer);
     if (!lexer->eof(lexer) && !is_newline(lexer->lookahead)) return line(lexer, valid);
@@ -272,10 +276,8 @@ static bool scan_defnlang(Scanner *scanner, TSLexer *lexer, const bool *valid) {
     while (!lexer->eof(lexer) && is_nnws(lexer->lookahead)) skip(lexer);
     if (lexer->eof(lexer)) return false;
     if (is_newline(lexer->lookahead)) {
-      if (at_line_start && valid[BLANK_LINE]) {
-        advance_newline(lexer, false);
-        lexer->mark_end(lexer);
-        lexer->result_symbol = BLANK_LINE;
+      if (at_line_start && valid[RULE_BREAK]) {
+        lexer->result_symbol = RULE_BREAK;
         return true;
       }
       advance_newline(lexer, true);
@@ -352,7 +354,7 @@ bool tree_sitter_ott_external_scanner_scan(void *payload, TSLexer *lexer, const 
   if (valid[HOM_STAR_TEXT]) return scan_hom_text(lexer, true);
   if (valid[QUOTATION_TEXT]) return scan_quotation(lexer);
   if (valid[ELEMENT]) return scan_element(lexer, valid);
-  if (valid[LINE] || valid[BLANK_LINE]) {
+  if (valid[LINE] || valid[RULE_BREAK]) {
     *scanner = previous;
     bool found = scan_defnlang(scanner, lexer, valid);
     if (found && lexer->result_symbol != BLOCK_COMMENT) scanner->after_comment = false;
